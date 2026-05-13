@@ -1,0 +1,71 @@
+﻿@{
+    var role = Context.Session.GetString("UserRole");
+    var name = Context.Session.GetString("Username");
+}
+
+<div class="container py-5 text-center">
+    <h1 class="display-4 fw-bold mb-3">Welcome to Donora</h1>
+    <p class="lead text-muted mb-5">Your hub for humanitarian impact and global philanthropy.</p>
+
+    <div class="row justify-content-center g-4">
+        @if (role == "Admin")
+        {
+            <!-- Admin Portal Cards -->
+            <div class="col-md-5">
+                <div class="card h-100 shadow-sm border-primary">
+                    <div class="card-body p-4">
+                        <i class="bi bi-kanban text-primary display-4 mb-3"></i>
+                        <h3>Initiative Management</h3>
+                        <p class="text-muted">Create, edit, and track the progress of global projects.</p>
+                        <a asp-controller="Admin" asp-action="ManageInitiatives" class="btn btn-primary w-100 py-2">Go to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card h-100 shadow-sm border-success">
+                    <div class="card-body p-4">
+                        <i class="bi bi-graph-up-arrow text-success display-4 mb-3"></i>
+                        <h3>Impact Reports</h3>
+                        <p class="text-muted">Analyze contributions, expenditures, and sector growth.</p>
+                        <a asp-controller="Admin" asp-action="Reports" class="btn btn-success w-100 py-2">View Analytics</a>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (role == "Supporter")
+        {
+            <!-- Supporter Portal Cards -->
+            <div class="col-md-5">
+                <div class="card h-100 shadow-sm border-info">
+                    <div class="card-body p-4">
+                        <i class="bi bi-search text-info display-4 mb-3"></i>
+                        <h3>Find Initiatives</h3>
+                        <p class="text-muted">Browse active projects and choose where to give.</p>
+                        <a asp-controller="Supporter" asp-action="Browse" class="btn btn-info text-white w-100 py-2">Start Exploring</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body p-4">
+                        <i class="bi bi-heart-fill text-danger display-4 mb-3"></i>
+                        <h3>My Impact</h3>
+                        <p class="text-muted">View your contribution history and receipts.</p>
+                        <a asp-controller="Supporter" asp-action="MyContributions" class="btn btn-outline-danger w-100 py-2">My Giving</a>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <!-- Guest View -->
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 bg-light p-5">
+                    <h3>Join the Movement</h3>
+                    <p>Login to start managing initiatives or making contributions.</p>
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg mt-3">Sign In</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

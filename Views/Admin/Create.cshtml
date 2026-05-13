@@ -1,0 +1,86 @@
+﻿@model Donora.Models.Entities.Initiative
+
+<div class="container mt-4">
+    @* Consistent Navigation Header *@
+    <div class="mb-4 mt-3">
+        <a asp-controller="Admin" asp-action="Index" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+        <a asp-controller="Admin" asp-action="ManageInitiatives" class="btn btn-sm btn-outline-primary ms-2">
+            <i class="bi bi-list-task"></i> View All Initiatives
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white py-3">
+                    <h4 class="mb-0 fw-bold"><i class="bi bi-plus-circle me-2"></i>Create New Humanitarian Initiative</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post">
+                        @* Validation Summary for debugging server-side issues *@
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="InitiativeName" class="form-label fw-bold">Initiative Name</label>
+                                <input asp-for="InitiativeName" class="form-control" placeholder="e.g., Clean Water Access" required />
+                                <span asp-validation-for="InitiativeName" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="SectorId" class="form-label fw-bold">Sector</label>
+                                <select asp-for="SectorId" class="form-select"
+                                        asp-items="@(new SelectList(ViewBag.Sectors, "SectorId", "Name"))">
+                                    <option value="">-- Select Sector --</option>
+                                </select>
+                                <span asp-validation-for="SectorId" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Objective" class="form-label fw-bold">Project Objective</label>
+                            <textarea asp-for="Objective" class="form-control" rows="3" placeholder="Describe the humanitarian impact..."></textarea>
+                            <span asp-validation-for="Objective" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="FundingTarget" class="form-label fw-bold">Funding Target ($)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input asp-for="FundingTarget" type="number" step="0.01" class="form-control" placeholder="0.00" required />
+                                </div>
+                                <span asp-validation-for="FundingTarget" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="StartDate" class="form-label fw-bold">Start Date</label>
+                                <input asp-for="StartDate" type="date" class="form-control" required />
+                                <span asp-validation-for="StartDate" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="EndDate" class="form-label fw-bold">End Date</label>
+                                <input asp-for="EndDate" type="date" class="form-control" required />
+                                <span asp-validation-for="EndDate" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-top d-flex gap-2">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-save me-2"></i>Save Initiative
+                            </button>
+                            @* REFACTOR: Points to Index instead of Dashboard *@
+                            <a asp-action="Index" class="btn btn-outline-secondary px-4">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

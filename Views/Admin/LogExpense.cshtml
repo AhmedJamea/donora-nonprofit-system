@@ -1,0 +1,94 @@
+﻿@model Donora.Models.Entities.Expenditure
+
+<div class="container mt-4">
+    @* Consistent Navigation Header *@
+    <div class="mb-4 mt-3">
+        <a asp-controller="Admin" asp-action="Index" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-speedometer2"></i> Back to Dashboard
+        </a>
+        <a asp-controller="Admin" asp-action="ManageInitiatives" class="btn btn-sm btn-outline-primary ms-2">
+            <i class="bi bi-list-task"></i> View All Initiatives
+        </a>
+    </div>
+
+    <div class="mx-auto" style="max-width: 600px;">
+        <h2 class="mb-4 text-center fw-bold">Financial Management</h2>
+
+        @* Success & Error Messages for Budget Validation *@
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert">
+                <i class="bi bi-exclamation-octagon-fill me-2"></i> <strong>Budget Error:</strong> @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <!-- Current Balance Display -->
+        <div class="alert alert-info border-0 shadow-sm d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <small class="text-uppercase d-block fw-bold text-muted" style="font-size: 0.7rem;">Available to Spend</small>
+                <span class="h4 mb-0 fw-bold text-dark">@((ViewBag.AvailableBalance ?? 0m).ToString("C2"))</span>
+            </div>
+            <div class="text-end">
+                <small class="d-block text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Project</small>
+                <span class="fw-bold text-primary">@ViewBag.ProjectName</span>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-danger text-white py-3">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-receipt-cutoff me-2"></i>Log New Expenditure</h5>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="LogExpense" method="post">
+                    @* Validation Summary *@
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    @* CRITICAL: Hidden ID for Repository Mapping *@
+                    <input type="hidden" asp-for="InitiativeId" />
+
+                    <div class="mb-3">
+                        <label asp-for="VendorName" class="form-label fw-bold">Vendor / Service Provider</label>
+                        <input asp-for="VendorName" class="form-control" required placeholder="e.g., Global Logistics Co." />
+                        <span asp-validation-for="VendorName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="AmountSpent" class="form-label fw-bold">Amount to Spend ($)</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-muted">$</span>
+                            <input asp-for="AmountSpent" type="number" step="0.01" class="form-control" placeholder="0.00" required />
+                        </div>
+                        <span asp-validation-for="AmountSpent" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="DateSpent" class="form-label fw-bold">Date of Transaction</label>
+                        <input asp-for="DateSpent" type="date" class="form-control"
+                               value="@Model.DateSpent.ToString("yyyy-MM-dd")" required />
+                        <span asp-validation-for="DateSpent" class="text-danger small"></span>
+                    </div>
+
+                    <div class="pt-3 border-top">
+                        <button type="submit" class="btn btn-danger btn-lg w-100 shadow-sm mb-3">
+                            <i class="bi bi-check2-square me-2"></i>Confirm Payment
+                        </button>
+                        <a asp-action="ManageInitiatives" class="btn btn-outline-secondary w-100">
+                            Cancel and Return
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <p class="text-center text-muted mt-4 small">
+            <i class="bi bi-shield-lock me-1"></i> All expenditures are logged for financial audit transparency.
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

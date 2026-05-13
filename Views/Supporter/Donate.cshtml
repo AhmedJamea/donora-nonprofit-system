@@ -1,0 +1,70 @@
+﻿@model Donora.Models.Entities.Contribution
+
+@{
+    ViewData["Title"] = "Make a Contribution";
+}
+
+<div class="container mt-4">
+    @* Consistent Navigation Header *@
+    <div class="mb-4 mt-3">
+        <a asp-controller="Supporter" asp-action="Index" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Initiatives
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm border-0">
+                @* Header with a softer, inviting color *@
+                <div class="card-header bg-success text-white py-3 text-center">
+                    <h4 class="mb-0 fw-bold"><i class="bi bi-heart-fill me-2"></i>Make a Contribution</h4>
+                </div>
+
+                <div class="card-body p-4">
+                    <p class="text-muted text-center mb-4">
+                        Your generosity fuels our mission. 100% of your contribution goes directly toward the initiative's funding target.
+                    </p>
+
+                    <form asp-action="Donate" method="post">
+                        @* Validation Summary for handling errors (e.g., negative amounts) *@
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        @* CRITICAL: Hidden ID for mapping the contribution to the correct project *@
+                        <input type="hidden" asp-for="InitiativeId" value="@ViewBag.InitiativeId" />
+
+                        <div class="mb-4">
+                            <label asp-for="Amount" class="form-label fw-bold text-dark">Donation Amount ($)</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-light text-muted fw-bold">$</span>
+                                <input asp-for="Amount" type="number" step="0.01" min="1"
+                                       class="form-control fw-bold" placeholder="0.00" required autofocus />
+                            </div>
+                            <span asp-validation-for="Amount" class="text-danger small"></span>
+                            <div class="form-text mt-2 italic">
+                                <i class="bi bi-shield-check me-1"></i> Secure financial transaction
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-top">
+                            <button type="submit" class="btn btn-success btn-lg w-100 shadow-sm py-3 fw-bold">
+                                Confirm My Donation
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer bg-light border-0 text-center py-3">
+                    <small class="text-muted">
+                        All contributions are logged for transparency and accountability.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

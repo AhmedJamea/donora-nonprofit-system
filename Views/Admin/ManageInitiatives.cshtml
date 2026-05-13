@@ -1,0 +1,153 @@
+﻿@model IEnumerable<Donora.Models.Entities.Initiative>
+
+<div class="container mt-4">
+    @* Navigation Bar *@
+    <div class="mb-4 mt-3">
+        @* Link to the Portal (Home/Index) *@
+        <a asp-controller="Home" asp-action="Index" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-house-door"></i> Back to Portal
+        </a>
+        @* Link to the Dashboard (Admin/Index) *@
+        <a asp-controller="Admin" asp-action="Index" class="btn btn-sm btn-outline-dark ms-2">
+            <i class="bi bi-speedometer2"></i> Admin Dashboard
+        </a>
+        <a asp-controller="Admin" asp-action="Reports" class="btn btn-sm btn-outline-primary ms-2">
+            <i class="bi bi-graph-up-arrow"></i> Go to Reports
+        </a>
+    </div>
+
+    @* Success & Error Messages *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> <strong>Success!</strong> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> <strong>Error:</strong> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @* Page Header *@
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-0">My Managed Initiatives</h2>
+            <p class="text-muted small">Manage funding and log project expenditures for your created projects.</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary px-4 shadow-sm">
+            <i class="bi bi-plus-lg"></i> Add New Initiative
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" style="min-width: 1000px;">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="ps-3" style="width: 20%;">Project Details</th>
+                        <th style="width: 30%;">Funding Progress</th>
+                        <th class="text-center" style="width: 15%;">Target</th>
+                        <th class="text-center" style="width: 15%;">Deadline</th>
+                        <th class="text-center" style="width: 20%;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                <i class="bi bi-folder2-open display-4 d-block mb-3"></i>
+                                <p>You haven't created any initiatives yet.</p>
+                                <a asp-action="Create" class="btn btn-sm btn-primary">Create Your First Project</a>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            var percentage = item.FundingTarget > 0
+                            ? (int)Math.Min((item.CurrentRaised / item.FundingTarget) * 100, 100)
+                            : 0;
+
+                            <tr>
+                                <td class="ps-3">
+                                    <div class="fw-bold text-primary">@item.InitiativeName</div>
+                                    <div class="text-muted x-small">ID: #@item.InitiativeId</div>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span class="small fw-bold">@percentage%</span>
+                                        <span class="small text-muted">Raised: @item.CurrentRaised.ToString("C0")</span>
+                                    </div>
+                                    <div class="progress" style="height: 10px; background-color: #e9ecef;">
+                                        <div class="progress-bar bg-success" role="progressbar"
+                                             style="width: @percentage%;"
+                                             aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center fw-bold">@item.FundingTarget.ToString("C0")</td>
+                                <td class="text-center">
+                                    <span class="badge rounded-pill bg-light text-dark border px-3">
+                                        @item.EndDate.ToString("yyyy-MM-dd")
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        <a asp-action="LogExpense" asp-route-initiativeId="@item.InitiativeId"
+                                           class="btn btn-sm btn-outline-danger px-2 py-1">
+                                            Expense
+                                        </a>
+
+                                        <a asp-action="Edit" asp-route-id="@item.InitiativeId"
+                                           class="btn btn-sm btn-outline-warning px-2 py-1">
+                                            Edit
+                                        </a>
+
+                                        @if (item.CurrentRaised > 0)
+                                        {
+                                            <button class="btn btn-sm btn-light text-muted border px-2 py-1" disabled title="Locked: Donations exist">
+                                                <i class="bi bi-lock-fill"></i> Locked
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="Delete" asp-route-id="@item.InitiativeId"
+                                               class="btn btn-sm btn-outline-secondary px-2 py-1"
+                                               onclick="return confirm('Are you sure you want to delete this initiative?')">
+                                                Delete
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .x-small {
+        font-size: 0.75rem;
+    }
+
+    .table thead th {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-sm {
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+</style>

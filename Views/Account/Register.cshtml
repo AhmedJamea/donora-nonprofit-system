@@ -1,0 +1,35 @@
+﻿@model Donora.Models.Entities.AppUser
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5 card p-4 shadow">
+            <h2 class="text-center">Create Account</h2>
+            <hr />
+            <form asp-action="Register" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input asp-for="FullName" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input asp-for="Email" type="email" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input asp-for="PasswordHash" type="password" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Register As</label>
+                    <select asp-for="Role" class="form-select">
+                        <option value="Supporter">Supporter (I want to donate)</option>
+                        <option value="Admin">Administrator (I manage projects)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Register</button>
+                <div class="mt-3 text-center">
+                    <a href="/Account/Login">Already have an account? Login here</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
