@@ -16,12 +16,10 @@ Donora is a full-stack humanitarian management system designed to support non-pr
 
 The system implements granular authorization for two distinct user roles:
 
-* 
-**Administrators:** Manage project lifecycles, log expenditures, and monitor organizational finances.
+* **Administrators:** Manage project lifecycles, log expenditures, and monitor organizational finances.
 
 
-* 
-**Supporters:** Browse active initiatives, contribute funds, and access personal giving history.
+* **Supporters:** Browse active initiatives, contribute funds, and access personal giving history.
 
 
 
@@ -34,16 +32,13 @@ The system implements granular authorization for two distinct user roles:
 
 The backend utilizes complex SQL aggregations to generate monthly impact reports:
 
-* 
-**Sector Performance:** Identifies categories (e.g., Health, Ecology) with the highest engagement.
+* **Sector Performance:** Identifies categories (e.g., Health, Ecology) with the highest engagement.
 
 
-* 
-**Administrative Red-Flags:** Automatically detects initiatives with no financial activity (contributions or spend) within specific periods.
+* **Administrative Red-Flags:** Automatically detects initiatives with no financial activity (contributions or spend) within specific periods.
 
 
-* 
-**Engagement Profiles:** Aggregates supporter data to track total initiatives funded per profile.
+* **Engagement Profiles:** Aggregates supporter data to track total initiatives funded per profile.
 
 
 
